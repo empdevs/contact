@@ -23,8 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use('/api/auth/', AuthRouter)
-app.use('/api/contact/', authenticateToken, ContactRouter)
+app.use('/api/auth/', AuthRouter);
+app.use('/api/contact/', authenticateToken, ContactRouter);
 //server running
 
 app.listen(port, () => {

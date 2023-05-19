@@ -7,7 +7,6 @@ import { RefreshTokenModel } from "../models/Models";
 
 export async function authenticateToken(req: any, res: Response, next: any) {
   const accessToken: string | any = req.headers["accesstoken"];
-  // console.log(accessToken);
   if (accessToken) {
     //  Automatic validation
     let validToken: string | any = accessToken;
