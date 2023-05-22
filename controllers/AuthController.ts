@@ -1,24 +1,18 @@
-import { Request, Response } from "express";
-import { RefreshTokenModel, UserModel } from "../models/Models";
-import { ITokenInfo, IUser } from "../Types";
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { Uri } from "../Uri";
-// import { Redis } from "ioredis";
+// import { Request, Response } from "express";
+const { RefreshTokenModel, UserModel } = require("../models/Models");
+const { ITokenInfo, IUser } = require("../Types");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { Uri } = require("../Uri");
 
-// export const redis: any = new Redis();
-// async function hashPassword(password: string) {
-//   const salt = await bcrypt.genSalt(10);
-//   return await bcrypt.hash(password, salt);
-// }
 
-export async function login(req: Request, res: Response) {
+export async function login(req: any, res: any) {
 
   const { username, password }: string | any = req.body;
 
   // try {
   if (username && password) {
-    let item: IUser[] | IUser = await UserModel.find({ username: username });
+    let item: any[] | any = await UserModel.find({ username: username });
     if (item.length > 0) {
       item = item[0];
       const passwordIsValid: boolean = bcrypt.compareSync(password, item.password);
@@ -32,7 +26,7 @@ export async function login(req: Request, res: Response) {
         })
       };
       // token info includes user info
-      const tokenInfo: ITokenInfo = {
+      const tokenInfo: any = {
         userId: item._id,
         username: item.username,
         aud: 'http://localhost'

@@ -1,11 +1,10 @@
-import jwtDecode, { JwtPayload } from "jwt-decode";
-import { Uri } from "../Uri";
-import { Request, Response } from "express";
-import jwt from 'jsonwebtoken';
-import { ITokenInfo } from "../Types";
-import { RefreshTokenModel } from "../models/Models";
+const { Uri } = require("../Uri");
+const { Response } = require("express");
+const jwt = require('jsonwebtoken');
+const { ITokenInfo } = require("../Types");
+const { RefreshTokenModel } = require("../models/Models");
 
-export async function authenticateToken(req: any, res: Response, next: any) {
+export async function authenticateToken(req: any, res: any, next: any) {
   const accessToken: string | any = req.headers["accesstoken"];
   if (accessToken) {
     //  Automatic validation
@@ -71,7 +70,7 @@ export async function authenticateToken(req: any, res: Response, next: any) {
 }
 
 export async function refreshToken(accessToken: string) {
-  const userInfo: ITokenInfo | any = jwt.decode(accessToken);
+  const userInfo: any = jwt.decode(accessToken);
   let refreshTokenItem = await RefreshTokenModel.findOne({ userId: userInfo.userId });
   // console.log(refreshTokenItem);
   const refreshToken = refreshTokenItem?.refreshToken!;
@@ -80,7 +79,7 @@ export async function refreshToken(accessToken: string) {
     if (err && err.name == "TokenExpiredError") return ("REFRESH_TOKEN_EXPIRED");
 
   })
-  const tokenInfo: ITokenInfo = {
+  const tokenInfo: any = {
     userId: userInfo.userId,
     username: userInfo.username,
     aud: 'http://localhost'

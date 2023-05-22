@@ -1,13 +1,13 @@
-import express, { Application } from "express";
-import cors from 'cors';
-import ContactRouter from './routers/ContactRouter';
-import AuthRouter from './routers/AuthRouter';
-import Connection from "./configuration/Database";
-import bodyParser from "body-parser";
-import { Uri } from "./Uri";
-import { authenticateToken } from "./helper/helper";
+const express = require("express");
+const cors = require("cors");
+const { ContactRouter } = require('./routers/ContactRouter')
+const { AuthRouter } = require('./routers/AuthRouter')
+const { Connection } = require('./configuration/Database')
+const bodyParser = require("body-parser");
+const { Uri } = require("./Uri");
+const { authenticateToken } = require("./helper/helper");
 
-const app: Application = express();
+const app: any = express();
 const port: number = Number(Uri.serverPort);
 
 Connection();

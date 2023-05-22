@@ -1,5 +1,5 @@
-import { Timestamp } from "mongodb";
-import mongoose from "mongoose";
+// const { Timestamp } = require("mongodb");
+const mongoose = require("mongoose");
 
 mongoose.Promise = global.Promise;
 export const ContactModel = mongoose.model('contacts',

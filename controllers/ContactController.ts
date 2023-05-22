@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { ContactModel } from "../models/Models";
-import { IContact } from "../Types";
+// import { Request, Response } from "express";
+const { ContactModel } = require("../models/Models");
+const { IContact } = require("../Types");
 
 interface IRequest extends Request {
   accessToken?: string
 }
 
-export async function getAllData(req: IRequest, res: Response, next: any) {
+export async function getAllData(req: any, res: any, next: any) {
   try {
     // console.log(req)
-    const data: IContact[] = await ContactModel.find();
+    const data: any[] = await ContactModel.find();
     res.send({
       status: 200,
       error: false,
@@ -30,10 +30,10 @@ export async function getAllData(req: IRequest, res: Response, next: any) {
   }
 }
 
-export async function createData(req: IRequest, res: Response) {
+export async function createData(req: any, res: any) {
   const data = new ContactModel(req.body);
   try {
-    const insertData: IContact = await data.save();
+    const insertData: any = await data.save();
     res.send({
       status: 201,
       error: false,
@@ -54,7 +54,7 @@ export async function createData(req: IRequest, res: Response) {
 }
 
 //This function is includes partial update if needed
-export async function updateData(req: IRequest, res: Response) {
+export async function updateData(req: any, res: any) {
   const id = req.params.id
   try {
     await ContactModel.updateOne({ _id: id }, { $set: req.body });
@@ -78,7 +78,7 @@ export async function updateData(req: IRequest, res: Response) {
   }
 }
 
-export async function deleteData(req: IRequest, res: Response) {
+export async function deleteData(req: any, res: any) {
   const id = req.params.id
   try {
     await ContactModel.deleteOne({ _id: id });

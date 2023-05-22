@@ -1,7 +1,7 @@
-import express, { Router } from "express";
-import { getAllData, createData, updateData, deleteData } from "../controllers/ContactController";
+const express = require("express");
+const { getAllData, createData, updateData, deleteData } = require("../controllers/ContactController");
 
-const router : Router = express.Router();
+const router: any = express.Router();
 
 // routing api after /api/contact/
 router.get('/', getAllData);
