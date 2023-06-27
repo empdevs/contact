@@ -38,7 +38,7 @@ export async function login(req: Request, res: Response) {
         aud: 'http://localhost'
       }
       // create token
-      const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
+      const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '2m' });
       const refreshToken = jwt.sign(tokenInfo, Uri.secretKeyRefresh, { expiresIn: '30d' });
 
       const refreshTokenItem = await RefreshTokenModel.find({ userId: item._id });
@@ -60,14 +60,14 @@ export async function login(req: Request, res: Response) {
       return res.send({
         status: 201,
         error: false,
-        data: null
+        message: "Username or password is wrong"
       });
     }
   } else {
     return res.send({
       status: 400,
       error: true,
-      message: "Username dan password doesn't exist"
+      message: "Username and password doesn't exist"
     });
   }
   // } catch (error: any) {

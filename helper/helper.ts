@@ -14,20 +14,44 @@ export async function authenticateToken(req: any, res: Response, next: any) {
     let isValid: boolean = true;
     try {
       do {
-
         await jwt.verify(validToken, Uri.secretKey, async (err: any, result: any) => {
           console.log("Error access token", err);
-          if (err && err.name == "TokenExpiredError") {
-            validToken = await refreshToken(validToken);
-            if (validToken == "REFRESH_TOKEN_EXPIRED") {
-              return res.send({
-                status: 403,
-                error: true,
-                body: {
-                  message: "Refresh token has expirated",
-                  reason: "REFRESH_TOKEN_EXPIRED"
+          console.log("Error name access token", err?.name);
+          if (err) {
+            switch (err.name) {
+              case "TokenExpiredError":
+                validToken = await refreshToken(validToken);
+                console.log(validToken);
+                if (validToken == "REFRESH_TOKEN_EXPIRED") {
+                  return res.send({
+                    status: 403,
+                    error: true,
+                    body: {
+                      message: "Refresh token has expired",
+                      reason: "REFRESH_TOKEN_EXPIRED"
+                    }
+                  });
+                } else if (validToken == "REFRESH_TOKEN_INVALID_SIGNATURE") {
+                  return res.send({
+                    status: 403,
+                    error: true,
+                    body: {
+                      message: "Refresh Token Invalid Signature",
+                      reason: "INVALID_SIGNATURE"
+                    }
+                  });
                 }
-              });
+                break;
+              default:
+                return res.send({
+                  status: 403,
+                  error: true,
+                  body: {
+                    message: "Error Token Invalid Signature",
+                    reason: "INVALID_SIGNATURE"
+                  }
+                });
+                break;
             }
             isValid = false;
             count++;
@@ -35,8 +59,7 @@ export async function authenticateToken(req: any, res: Response, next: any) {
             const decodeToken: any = result;
             const intendedAudienceURL = Uri.rootUri;
             // console.log(decodeToken)
-            if (!!!decodeToken)
-              return;
+            if (!!!decodeToken) return;
             if (decodeToken.aud !== intendedAudienceURL) {
               return res.send({
                 status: 403,
@@ -47,8 +70,8 @@ export async function authenticateToken(req: any, res: Response, next: any) {
                 }
               });
             }
-            if (count !== 0)
-              req["accessToken"] = validToken;
+
+            if (count !== 0) req["accessToken"] = validToken;
             isValid = true;
             return next();
           }
@@ -72,20 +95,32 @@ export async function authenticateToken(req: any, res: Response, next: any) {
 
 export async function refreshToken(accessToken: string) {
   const userInfo: ITokenInfo | any = jwt.decode(accessToken);
-  let refreshTokenItem = await RefreshTokenModel.findOne({ userId: userInfo.userId });
-  // console.log(refreshTokenItem);
+  const refreshTokenItem = await RefreshTokenModel.findOne({ userId: userInfo.userId });
   const refreshToken = refreshTokenItem?.refreshToken!;
-  await jwt.verify(refreshToken, Uri.secretKeyRefresh, (err: any, result: any) => {
+  let res: string = "";
+  await jwt.verify(refreshToken, Uri.secretKeyRefresh, async (err: any, result: any) => {
     console.log("Error refresh token", err)
-    if (err && err.name == "TokenExpiredError") return ("REFRESH_TOKEN_EXPIRED");
-
-  })
-  const tokenInfo: ITokenInfo = {
-    userId: userInfo.userId,
-    username: userInfo.username,
-    aud: 'http://localhost'
-  }
-  const newAccessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
-  // console.log("new access token", newAccessToken);
-  return (newAccessToken);
+    console.log("Error name refresh token", err?.name)
+    if (err) {
+      switch (err.name) {
+        case "TokenExpiredError":
+          await RefreshTokenModel.deleteOne({ userId: userInfo.userId })
+          res = "REFRESH_TOKEN_EXPIRED";
+          break;
+        default:
+          res = "REFRESH_TOKEN_INVALID_SIGNATURE";
+          break;
+      }
+    } else {
+      const tokenInfo: ITokenInfo = {
+        userId: userInfo.userId,
+        username: userInfo.username,
+        aud: 'http://localhost'
+      }
+      const newAccessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
+      // console.log("new access token", newAccessToken);
+      res = newAccessToken;
+    }
+  });
+  return (res);
 }
