@@ -16,67 +16,67 @@ export async function login(req: Request, res: Response) {
 
   const { username, password }: string | any = req.body;
 
-  // try {
-  if (username && password) {
-    let item: IUser[] | IUser = await UserModel.find({ username: username });
-    if (item.length > 0) {
-      item = item[0];
-      const passwordIsValid: boolean = bcrypt.compareSync(password, item.password);
-      if (!!!passwordIsValid) {
-        res.send({
-          status: 201,
-          error: true,
-          body: {
-            message: "Username or password incorect"
-          }
-        })
-      };
-      // token info includes user info
-      const tokenInfo: ITokenInfo = {
-        userId: item._id,
-        username: item.username,
-        aud: 'http://localhost'
-      }
-      // create token
-      const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
-      const refreshToken = jwt.sign(tokenInfo, Uri.secretKeyRefresh, { expiresIn: '30d' });
-
-      const refreshTokenItem = await RefreshTokenModel.find({ userId: item._id });
-      if (refreshTokenItem.length == 0) {
-        await RefreshTokenModel.create({ userId: item._id, refreshToken: refreshToken });
-      }
-
-
-      return res.send({
-        status: 201,
-        error: false,
-        data: {
-          id: item._id,
+  try {
+    if (username && password) {
+      let item: IUser[] | IUser = await UserModel.find({ username: username });
+      if (item.length > 0) {
+        item = item[0];
+        const passwordIsValid: boolean = bcrypt.compareSync(password, item.password);
+        if (!!!passwordIsValid) {
+          res.send({
+            status: 201,
+            error: true,
+            body: {
+              message: "Username or password incorect"
+            }
+          })
+        };
+        // token info includes user info
+        const tokenInfo: ITokenInfo = {
+          userId: item._id,
           username: item.username,
-          accessToken: accessToken
+          aud: 'http://localhost'
         }
-      });
+        // create token
+        const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
+        const refreshToken = jwt.sign(tokenInfo, Uri.secretKeyRefresh, { expiresIn: '30d' });
+
+        const refreshTokenItem = await RefreshTokenModel.find({ userId: item._id });
+        if (refreshTokenItem.length == 0) {
+          await RefreshTokenModel.create({ userId: item._id, refreshToken: refreshToken });
+        }
+
+
+        return res.send({
+          status: 201,
+          error: false,
+          data: {
+            id: item._id,
+            username: item.username,
+            accessToken: accessToken
+          }
+        });
+      } else {
+        return res.send({
+          status: 201,
+          error: false,
+          message: "Username or password is wrong"
+        });
+      }
     } else {
       return res.send({
-        status: 201,
-        error: false,
-        message: "Username or password is wrong"
+        status: 400,
+        error: true,
+        message: "Username and password doesn't exist"
       });
     }
-  } else {
+  } catch (error: any) {
+    // console.log(error.response)
     return res.send({
-      status: 400,
+      status: 401,
       error: true,
-      message: "Username and password doesn't exist"
+      message: error.message
     });
   }
-  // } catch (error: any) {
-  //   // console.log(error.response)
-  //   return res.send({
-  //     status: 401,
-  //     error: true,
-  //     message: error.message
-  //   });
-  // }
 
 }
