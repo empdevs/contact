@@ -38,7 +38,7 @@ export async function login(req: Request, res: Response) {
         aud: 'http://localhost'
       }
       // create token
-      const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '2m' });
+      const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
       const refreshToken = jwt.sign(tokenInfo, Uri.secretKeyRefresh, { expiresIn: '30d' });
 
       const refreshTokenItem = await RefreshTokenModel.find({ userId: item._id });
