@@ -31,7 +31,8 @@ export async function authenticateToken(req: any, res: Response, next: any) {
                       reason: "REFRESH_TOKEN_EXPIRED"
                     }
                   });
-                } else if (validToken == "REFRESH_TOKEN_INVALID_SIGNATURE") {
+                }
+                if (validToken == "REFRESH_TOKEN_INVALID_SIGNATURE") {
                   return res.send({
                     status: 403,
                     error: true,
