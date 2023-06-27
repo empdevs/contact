@@ -5,7 +5,6 @@ export interface IContact {
   name: string,
   phone: number
 }
-
 export interface IUser {
   _id: ObjectId,
   username: string,
