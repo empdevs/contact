@@ -12,7 +12,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const Uri_1 = require("./Uri");
 const helper_1 = require("./helper/helper");
 const app = (0, express_1.default)();
-const port = Number(Uri_1.Uri.serverPort);
+const port = Number(Uri_1.Uri.serverPort) || 3000;
 (0, Database_1.default)();
 // CORS is a mechanism to tell the browser, whether a request that is
 // dispatched from another web application domain or another origin, to our web application is allowed or not.
@@ -25,9 +25,11 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use('/api/auth/', AuthRouter_1.default);
 app.use('/api/contact/', helper_1.authenticateToken, ContactRouter_1.default);
+app.use('*', (req, res) => {
+    res.json({ msg: 'no route handler found' }).end();
+});
 //server running
-app.set('port', (port));
-app.listen(app.get('port'), () => {
+app.listen(port, () => {
     // await Connection();
     console.log(`Server running at port ${port} `);
 });
