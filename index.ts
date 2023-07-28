@@ -8,7 +8,7 @@ import { Uri } from "./Uri";
 import { authenticateToken } from "./helper/helper";
 
 const app: Application = express();
-const port: number = Number(Uri.serverPort);
+const port: number = Number(Uri.serverPort) || 3000;
 
 Connection();
 // CORS is a mechanism to tell the browser, whether a request that is
@@ -25,8 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/auth/', AuthRouter);
 app.use('/api/contact/', authenticateToken, ContactRouter);
+app.use('*', (req, res) => {
+  res.json({ msg: 'no route handler found' }).end();
+});
 //server running
-
 app.listen(port, () => {
   // await Connection();
   console.log(`Server running at port ${port} `);
