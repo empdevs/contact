@@ -116,7 +116,7 @@ export async function refreshToken(accessToken: string) {
       const tokenInfo: ITokenInfo = {
         userId: userInfo.userId,
         username: userInfo.username,
-        aud: 'http://localhost'
+        aud: Uri.rootUri
       }
       const newAccessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
       // console.log("new access token", newAccessToken);

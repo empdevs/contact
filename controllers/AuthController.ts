@@ -35,7 +35,7 @@ export async function login(req: Request, res: Response) {
         const tokenInfo: ITokenInfo = {
           userId: item._id,
           username: item.username,
-          aud: 'http://localhost'
+          aud: Uri.rootUri
         }
         // create token
         const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
