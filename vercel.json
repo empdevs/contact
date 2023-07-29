@@ -2,17 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src": "./build/index.js",
-            "use": "@now/node-server"
+            "src": "index.ts",
+            "use": "@vercel/node"
         }
     ],
     "routes": [
         {
-            "handle": "filesystem"
-        },
-        {
-            "src": "./build/.*",
-            "dest": "index.js"
+            "src": "/(.*)",
+            "dest": "index.ts"
         }
     ]
 }
