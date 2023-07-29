@@ -1,8 +1,18 @@
 {
-    "rewrites": [
+    "version": 2,
+    "builds": [
         {
-            "source": "/build/(.*)",
-            "destination": "/build"
+            "src": "./build/index.js",
+            "use": "@now/node-server"
+        }
+    ],
+    "routes": [
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "./build/.*",
+            "dest": "index.js"
         }
     ]
 }
