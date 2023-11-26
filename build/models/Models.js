@@ -7,6 +7,10 @@ exports.RefreshTokenModel = exports.UserModel = exports.ContactModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 mongoose_1.default.Promise = global.Promise;
 exports.ContactModel = mongoose_1.default.model('contacts', new mongoose_1.default.Schema({
+    id: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true

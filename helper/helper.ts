@@ -15,7 +15,7 @@ export async function authenticateToken(req: any, res: Response, next: any) {
     try {
       do {
         await jwt.verify(validToken, Uri.secretKey, async (err: any, result: any) => {
-          console.log("Error access token", err);
+          // console.log("Error access token", err);
           console.log("Error name access token", err?.name);
           if (err) {
             switch (err.name) {

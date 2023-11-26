@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteData = exports.updateData = exports.createData = exports.getAllData = void 0;
 const Models_1 = require("../models/Models");
+const uuid_1 = require("uuid");
 function getAllData(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -19,10 +20,8 @@ function getAllData(req, res, next) {
             res.send({
                 status: 200,
                 error: false,
-                body: {
-                    item: data,
-                    accessToken: req.accessToken
-                },
+                message: "Success get data",
+                data: data,
             });
         }
         catch (error) {
@@ -30,9 +29,7 @@ function getAllData(req, res, next) {
             res.send({
                 status: 400,
                 error: true,
-                body: {
-                    message: error.message
-                }
+                message: error.message
             });
         }
     });
@@ -40,25 +37,21 @@ function getAllData(req, res, next) {
 exports.getAllData = getAllData;
 function createData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const data = new Models_1.ContactModel(req.body);
+        const data = new Models_1.ContactModel(Object.assign({ id: (0, uuid_1.v4)() }, req.body));
         try {
             const insertData = yield data.save();
             res.send({
                 status: 201,
                 error: false,
-                body: {
-                    item: insertData,
-                    accessToken: req.accessToken
-                }
+                message: "Success create data",
+                data: insertData
             });
         }
         catch (error) {
             res.send({
                 status: 401,
                 error: true,
-                body: {
-                    message: error.message
-                }
+                message: error.message
             });
         }
     });
@@ -73,10 +66,7 @@ function updateData(req, res) {
             res.send({
                 status: 201,
                 error: false,
-                body: {
-                    message: "Success update data",
-                    accessToken: req.accessToken
-                }
+                message: "Success update data",
             });
         }
         catch (error) {
@@ -84,9 +74,7 @@ function updateData(req, res) {
             res.send({
                 status: 401,
                 error: true,
-                body: {
-                    message: error.message
-                }
+                message: error.message
             });
         }
     });
@@ -96,14 +84,11 @@ function deleteData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const id = req.params.id;
         try {
-            yield Models_1.ContactModel.deleteOne({ _id: id });
+            yield Models_1.ContactModel.deleteOne({ id: id });
             res.send({
                 status: 201,
                 error: false,
-                body: {
-                    message: "Success delete data",
-                    accessToken: req.accessToken
-                }
+                message: "Success delete data",
             });
         }
         catch (error) {
@@ -111,9 +96,7 @@ function deleteData(req, res) {
             res.send({
                 status: 401,
                 error: true,
-                body: {
-                    message: error.message
-                }
+                message: error.message
             });
         }
     });

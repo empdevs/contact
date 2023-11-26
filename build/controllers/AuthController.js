@@ -33,20 +33,18 @@ function login(req, res) {
                     item = item[0];
                     const passwordIsValid = bcryptjs_1.default.compareSync(password, item.password);
                     if (!!!passwordIsValid) {
-                        res.send({
-                            status: 201,
+                        return res.send({
+                            status: 401,
                             error: true,
-                            body: {
-                                message: "Username or password incorect"
-                            }
+                            message: "Password is wrong",
+                            data: null,
                         });
                     }
-                    ;
                     // token info includes user info
                     const tokenInfo = {
                         userId: item._id,
                         username: item.username,
-                        aud: 'http://localhost'
+                        aud: Uri_1.Uri.rootUri
                     };
                     // create token
                     const accessToken = jsonwebtoken_1.default.sign(tokenInfo, Uri_1.Uri.secretKey, { expiresIn: '1h' });
@@ -58,6 +56,7 @@ function login(req, res) {
                     return res.send({
                         status: 201,
                         error: false,
+                        message: "Login successful",
                         data: {
                             id: item._id,
                             username: item.username,
@@ -67,15 +66,15 @@ function login(req, res) {
                 }
                 else {
                     return res.send({
-                        status: 201,
-                        error: false,
+                        status: 401,
+                        error: true,
                         message: "Username or password is wrong"
                     });
                 }
             }
             else {
                 return res.send({
-                    status: 400,
+                    status: 401,
                     error: true,
                     message: "Username and password doesn't exist"
                 });

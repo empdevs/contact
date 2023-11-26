@@ -4,7 +4,7 @@ import { Uri } from "../Uri";
 
 async function Connection() {
   try {
-    const connectionString: string = Uri.dbUri + Uri.dbName;
+    const connectionString: string = `${Uri.dbUri}/${Uri.dbName}`;
     mongoose.set('strictQuery', false)
     const connection = await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
     connection.connection;

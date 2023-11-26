@@ -23,14 +23,13 @@ export async function login(req: Request, res: Response) {
         item = item[0];
         const passwordIsValid: boolean = bcrypt.compareSync(password, item.password);
         if (!!!passwordIsValid) {
-          res.send({
-            status: 201,
+          return res.send({
+            status: 401,
             error: true,
-            body: {
-              message: "Username or password incorect"
-            }
-          })
-        };
+            message: "Password is wrong",
+            data: null,
+          });
+        }
         // token info includes user info
         const tokenInfo: ITokenInfo = {
           userId: item._id,
@@ -50,6 +49,7 @@ export async function login(req: Request, res: Response) {
         return res.send({
           status: 201,
           error: false,
+          message: "Login successful",
           data: {
             id: item._id,
             username: item.username,
@@ -58,14 +58,14 @@ export async function login(req: Request, res: Response) {
         });
       } else {
         return res.send({
-          status: 201,
-          error: false,
+          status: 401,
+          error: true,
           message: "Username or password is wrong"
         });
       }
     } else {
       return res.send({
-        status: 400,
+        status: 401,
         error: true,
         message: "Username and password doesn't exist"
       });

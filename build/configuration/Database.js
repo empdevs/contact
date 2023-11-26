@@ -17,7 +17,7 @@ const Uri_1 = require("../Uri");
 function Connection() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const connectionString = Uri_1.Uri.dbUri + Uri_1.Uri.dbName;
+            const connectionString = `${Uri_1.Uri.dbUri}/${Uri_1.Uri.dbName}`;
             mongoose_1.default.set('strictQuery', false);
             const connection = yield mongoose_1.default.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
             connection.connection;

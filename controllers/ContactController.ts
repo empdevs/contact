@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ContactModel } from "../models/Models";
 import { IContact } from "../Types";
+import { v4 as uuidv4 } from "uuid";
 
 interface IRequest extends Request {
   accessToken?: string
@@ -13,42 +14,34 @@ export async function getAllData(req: IRequest, res: Response, next: any) {
     res.send({
       status: 200,
       error: false,
-      body: {
-        item: data,
-        accessToken: req.accessToken
-      },
+      message: "Success get data",
+      data: data,
     });
   } catch (error: any) {
     console.log(error);
     res.send({
       status: 400,
       error: true,
-      body: {
-        message: error.message
-      }
+      message: error.message
     });
   }
 }
 
 export async function createData(req: IRequest, res: Response) {
-  const data = new ContactModel(req.body);
+  const data = new ContactModel({ id: uuidv4(), ...req.body });
   try {
     const insertData: IContact = await data.save();
     res.send({
       status: 201,
       error: false,
-      body: {
-        item: insertData,
-        accessToken: req.accessToken
-      }
+      message: "Success create data",
+      data: insertData
     });
   } catch (error: any) {
     res.send({
       status: 401,
       error: true,
-      body: {
-        message: error.message
-      }
+      message: error.message
     });
   }
 }
@@ -61,19 +54,14 @@ export async function updateData(req: IRequest, res: Response) {
     res.send({
       status: 201,
       error: false,
-      body: {
-        message: "Success update data",
-        accessToken: req.accessToken
-      }
+      message: "Success update data",
     });
   } catch (error: any) {
     console.log(error);
     res.send({
       status: 401,
       error: true,
-      body: {
-        message: error.message
-      }
+      message: error.message
     });
   }
 }
@@ -81,23 +69,18 @@ export async function updateData(req: IRequest, res: Response) {
 export async function deleteData(req: IRequest, res: Response) {
   const id = req.params.id
   try {
-    await ContactModel.deleteOne({ _id: id });
+    await ContactModel.deleteOne({ id: id });
     res.send({
       status: 201,
       error: false,
-      body: {
-        message: "Success delete data",
-        accessToken: req.accessToken
-      }
+      message: "Success delete data",
     });
   } catch (error: any) {
     console.log(error);
     res.send({
       status: 401,
       error: true,
-      body: {
-        message: error.message
-      }
+      message: error.message
     });
   }
 }

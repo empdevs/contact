@@ -4,6 +4,10 @@ import mongoose from "mongoose";
 mongoose.Promise = global.Promise;
 export const ContactModel = mongoose.model('contacts',
   new mongoose.Schema({
+    id: {
+      type: String,
+      required: true
+    },
     name: {
       type: String,
       required: true

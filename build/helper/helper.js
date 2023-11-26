@@ -27,7 +27,7 @@ function authenticateToken(req, res, next) {
             try {
                 do {
                     yield jsonwebtoken_1.default.verify(validToken, Uri_1.Uri.secretKey, (err, result) => __awaiter(this, void 0, void 0, function* () {
-                        console.log("Error access token", err);
+                        // console.log("Error access token", err);
                         console.log("Error name access token", err === null || err === void 0 ? void 0 : err.name);
                         if (err) {
                             switch (err.name) {
@@ -135,7 +135,7 @@ function refreshToken(accessToken) {
                 const tokenInfo = {
                     userId: userInfo.userId,
                     username: userInfo.username,
-                    aud: 'http://localhost'
+                    aud: Uri_1.Uri.rootUri
                 };
                 const newAccessToken = jsonwebtoken_1.default.sign(tokenInfo, Uri_1.Uri.secretKey, { expiresIn: '1h' });
                 // console.log("new access token", newAccessToken);
