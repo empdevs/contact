@@ -9,7 +9,7 @@ const router = express_1.default.Router();
 // routing api after /api/contact/
 router.get('/', ContactController_1.getAllData);
 router.post('/create', ContactController_1.createData);
-router.patch('/update', ContactController_1.updateData);
+router.patch('/patch/:id', ContactController_1.updateData);
 router.delete('/delete/:id', ContactController_1.deleteData);
 exports.default = router;
 //# sourceMappingURL=ContactRouter.js.map

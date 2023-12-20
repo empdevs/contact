@@ -48,9 +48,11 @@ export async function createData(req: IRequest, res: Response) {
 
 //This function is includes partial update if needed
 export async function updateData(req: IRequest, res: Response) {
+
+  console.log(req)
   const id = req.params.id
   try {
-    await ContactModel.updateOne({ _id: id }, { $set: req.body });
+    await ContactModel.updateOne({ id: id }, { $set: req.body });
     res.send({
       status: 201,
       error: false,

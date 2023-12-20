@@ -33,7 +33,6 @@ function login(req, res) {
                     item = item[0];
                     const passwordIsValid = bcryptjs_1.default.compareSync(password, item.password);
                     if (!!!passwordIsValid) {
-<<<<<<< HEAD
                         return res.send({
                             status: 401,
                             error: true,
@@ -41,26 +40,11 @@ function login(req, res) {
                             data: null,
                         });
                     }
-=======
-                        res.send({
-                            status: 201,
-                            error: true,
-                            body: {
-                                message: "Username or password incorect"
-                            }
-                        });
-                    }
-                    ;
->>>>>>> 7eb8faa4392244e864d1ac6c3a9bdb25d3b2c91a
                     // token info includes user info
                     const tokenInfo = {
                         userId: item._id,
                         username: item.username,
-<<<<<<< HEAD
                         aud: Uri_1.Uri.rootUri
-=======
-                        aud: 'http://localhost'
->>>>>>> 7eb8faa4392244e864d1ac6c3a9bdb25d3b2c91a
                     };
                     // create token
                     const accessToken = jsonwebtoken_1.default.sign(tokenInfo, Uri_1.Uri.secretKey, { expiresIn: '1h' });
@@ -72,10 +56,7 @@ function login(req, res) {
                     return res.send({
                         status: 201,
                         error: false,
-<<<<<<< HEAD
                         message: "Login successful",
-=======
->>>>>>> 7eb8faa4392244e864d1ac6c3a9bdb25d3b2c91a
                         data: {
                             id: item._id,
                             username: item.username,
@@ -85,24 +66,15 @@ function login(req, res) {
                 }
                 else {
                     return res.send({
-<<<<<<< HEAD
                         status: 401,
                         error: true,
-=======
-                        status: 201,
-                        error: false,
->>>>>>> 7eb8faa4392244e864d1ac6c3a9bdb25d3b2c91a
                         message: "Username or password is wrong"
                     });
                 }
             }
             else {
                 return res.send({
-<<<<<<< HEAD
                     status: 401,
-=======
-                    status: 400,
->>>>>>> 7eb8faa4392244e864d1ac6c3a9bdb25d3b2c91a
                     error: true,
                     message: "Username and password doesn't exist"
                 });
