@@ -1,5 +1,5 @@
-import { Timestamp } from "mongodb";
 import mongoose from "mongoose";
+import { IUser } from "../Types";
 
 mongoose.Promise = global.Promise;
 export const ContactModel = mongoose.model('contacts',
@@ -18,8 +18,12 @@ export const ContactModel = mongoose.model('contacts',
     },
   }));
 
-export const UserModel = mongoose.model('users',
+export const UserModel = mongoose.model<IUser>('users',
   new mongoose.Schema({
+    id: {
+      type: String,
+      required: true
+    },
     username: {
       type: String,
       required: true
@@ -28,6 +32,18 @@ export const UserModel = mongoose.model('users',
       type: String,
       required: true
     },
+    notification: {
+      type: {
+        token: {
+          type: String,
+          required: true
+        },
+        chatId: {
+          type: String,
+          required: true
+        },
+      },
+    }
   })
 );
 

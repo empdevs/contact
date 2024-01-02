@@ -1,18 +1,21 @@
-import { ObjectId } from "mongodb";
+import { Document } from "mongodb";
 
-export interface IContact {
-  _id: ObjectId,
+export interface IContact extends Document {
+  id: string,
   name: string,
   phone: number
 }
-export interface IUser {
-  _id: ObjectId,
+export interface IUser extends Document {
+  id: string,
   username: string,
-  password: string
+  password: string,
+  notification?: {
+    token: string,
+    chatId: string
+  }
 }
 
-export interface ITokenInfo {
-  userId: ObjectId,
+export interface ITokenInfo extends Document {
+  userId: string,
   username: string,
-  aud: string,
 }

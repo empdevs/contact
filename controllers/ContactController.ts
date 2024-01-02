@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { ContactModel } from "../models/Models";
-import { IContact } from "../Types";
+import { ContactModel, UserModel } from "../models/Models";
+import { IContact, IUser } from "../Types";
 import { v4 as uuidv4 } from "uuid";
+import { sendNotification, textFormat } from "../helper/helper";
 
 interface IRequest extends Request {
   accessToken?: string
@@ -9,7 +10,8 @@ interface IRequest extends Request {
 
 export async function getAllData(req: IRequest, res: Response, next: any) {
   try {
-    // console.log(req)
+    console.log("request", req["accessToken"]);
+    // console.log("response", res)
     const data: IContact[] = await ContactModel.find();
     res.send({
       status: 200,
@@ -29,8 +31,20 @@ export async function getAllData(req: IRequest, res: Response, next: any) {
 
 export async function createData(req: IRequest, res: Response) {
   const data = new ContactModel({ id: uuidv4(), ...req.body });
+  // const userId = req.params.userId;
+  // const username = req.params.username;
   try {
     const insertData: IContact = await data.save();
+    // const message = "{username} created new contact";
+    // const users: IUser[] = await UserModel.find(
+    //   {
+    //     id: { $ne: userId }
+    //   }
+    // );
+    // console.log(users);
+    // for (const user of users) {
+    //   await sendNotification(message, { username: username }, user.id);
+    // }
     res.send({
       status: 201,
       error: false,
