@@ -66,7 +66,10 @@ export async function sendNotification(message: string, keyValuePair: any, userI
         const msg = textFormat(message, keyValuePair);
 
         const bot = new TelegramBot(token, { polling: true });
-        await bot.sendMessage(chatId, msg);
+        bot.on('message', (msg) => {
+          console.log("msg", msg);
+        });
+        bot.sendMessage(chatId, msg);
 
         return ({
           error: false,

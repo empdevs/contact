@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ContactModel, UserModel } from "../models/Models";
 import { IContact, IUser } from "../Types";
 import { v4 as uuidv4 } from "uuid";
-import { sendNotification, textFormat } from "../helper/helper";
+// import { sendNotification, textFormat } from "../helper/helper";
 
 interface IRequest extends Request {
   accessToken?: string
