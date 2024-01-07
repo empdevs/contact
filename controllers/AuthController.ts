@@ -28,7 +28,7 @@ export async function login(req: Request, res: Response) {
         }
 
         // create token
-        const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1m' });
+        const accessToken = jwt.sign(tokenInfo, Uri.secretKey, { expiresIn: '1h' });
         const refreshToken = jwt.sign(tokenInfo, Uri.secretKeyRefresh, { expiresIn: '30d' });
 
         const refreshTokenItem = await RefreshTokenModel.findOne({ userId: item.id });
