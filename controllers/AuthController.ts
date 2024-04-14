@@ -79,7 +79,7 @@ export async function refreshToken(req: Request, res: Response) {
     });
   }
 
-  const userInfo: ITokenInfo = jwt.decode(accessToken);
+  const userInfo: ITokenInfo | any = jwt.decode(accessToken);
   const refreshTokenItem = await RefreshTokenModel.findOne({ userId: userInfo.userId });
   if (!!!refreshTokenItem) {
     return res.send({
