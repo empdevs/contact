@@ -24,8 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/auth/', AuthRouter);
-// app.use('/api/contact/', authenticateToken, ContactRouter);
-app.use('/api/contact/', ContactRouter);
+app.use('/api/contact/', authenticateToken, ContactRouter);
+// app.use('/api/contact/', ContactRouter);
 app.use('*', (req, res) => {
   res.json({ msg: 'no route handler found' }).end();
 });
