@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { IUser } from "../Types";
 import { UserModel } from "../models/Models";
-import { TelegramBot } from "node-telegram-bot-api";
+// import { TelegramBot } from "node-telegram-bot-api";
 
 export async function authenticateToken(req: any, res: Response, next: any) {
   let accessToken: string = req.headers["accesstoken"];
@@ -53,49 +53,49 @@ export function textFormat(string: string, keyValuePairs: any): string {
 /**
  * Send notification Telegram Bot
  */
-export async function sendNotification(message: string, keyValuePair: any, userId: string) {
-  try {
-    const user: IUser = await UserModel.findOne<IUser>({ id: userId });
-    console.log(user);
-    if (user) {
-      if (user?.notification?.token && user?.notification?.chatId) {
+// export async function sendNotification(message: string, keyValuePair: any, userId: string) {
+//   try {
+//     const user: IUser = await UserModel.findOne<IUser>({ id: userId });
+//     console.log(user);
+//     if (user) {
+//       if (user?.notification?.token && user?.notification?.chatId) {
 
-        const token = user.notification.token;
-        const chatId = user.notification.token.split("#").pop();
+//         const token = user.notification.token;
+//         const chatId = user.notification.token.split("#").pop();
 
-        const msg = textFormat(message, keyValuePair);
+//         const msg = textFormat(message, keyValuePair);
 
-        const bot = new TelegramBot(token, { polling: true });
-        bot.on('message', (msg) => {
-          console.log("msg", msg);
-        });
-        bot.sendMessage(chatId, msg);
+//         const bot = new TelegramBot(token, { polling: true });
+//         bot.on('message', (msg) => {
+//           console.log("msg", msg);
+//         });
+//         bot.sendMessage(chatId, msg);
 
-        return ({
-          error: false,
-          status: 200,
-          message: "Send notification successfully"
-        })
-      } else {
-        return ({
-          error: true,
-          status: 404,
-          message: "Chat ID and Conversation Toket doesn't exists"
-        });
-      }
-    } else {
-      console.log("User is not found");
-      return ({
-        error: true,
-        status: 404,
-        message: "User doesn't exists"
-      });
-    }
-  } catch (error) {
-    return ({
-      error: true,
-      status: 500,
-      message: error
-    });
-  }
-}
+//         return ({
+//           error: false,
+//           status: 200,
+//           message: "Send notification successfully"
+//         })
+//       } else {
+//         return ({
+//           error: true,
+//           status: 404,
+//           message: "Chat ID and Conversation Toket doesn't exists"
+//         });
+//       }
+//     } else {
+//       console.log("User is not found");
+//       return ({
+//         error: true,
+//         status: 404,
+//         message: "User doesn't exists"
+//       });
+//     }
+//   } catch (error) {
+//     return ({
+//       error: true,
+//       status: 500,
+//       message: error
+//     });
+//   }
+// }
