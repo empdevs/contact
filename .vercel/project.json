@@ -1,0 +1,16 @@
+{
+  "projectId": "prj_VOyNlbBeh3fFwjGAaXrvpGO4e4ja",
+  "orgId": "OpirRqkVb6TbzjvPyV2NoVIv",
+  "settings": {
+    "createdAt": 1690619153443,
+    "framework": null,
+    "devCommand": null,
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
+    "outputDirectory": "build",
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "18.x",
+    "analyticsId": "ftjZJBIZY14mYjLHMHCOruVpJF9"
+  }
+}
