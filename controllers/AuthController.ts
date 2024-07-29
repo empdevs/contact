@@ -4,10 +4,27 @@ import { ITokenInfo, IUser } from "../Types";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Uri } from "../Uri";
+import { google } from "googleapis";
+import { Credentials, OAuth2Client, TokenPayload } from "google-auth-library";
+import jwtDecode from "jwt-decode";
+
+/**
+ * To use OAuth2 authentication, we need access to a CLIENT_ID, CLIENT_SECRET, AND REDIRECT_URI
+ * from the client_secret.json file. To get these credentials for your application, visit
+ * https://console.cloud.google.com/apis/credentials.
+ */
+const oauth2Client = new google.auth.OAuth2(
+  Uri.googleClientId,
+  Uri.googleClientSecret,
+  "http://localhost:3001"
+);
 
 export async function login(req: Request, res: Response) {
 
-  const { username, password }: string | any = req.body;
+  const { username, password, authuser, code, prompt, scope }: string | any = req.body;
+  /**
+   * The second condition is used for login with google
+   */
   try {
     if (username && password) {
       let item: IUser = await UserModel.findOne<IUser>({ username: username });
@@ -49,6 +66,47 @@ export async function login(req: Request, res: Response) {
           status: 401,
           error: true,
           message: "Username or password is wrong"
+        });
+      }
+    } else if (authuser && code && prompt && scope) {
+      /**
+       * Get access & refresh token
+       */
+      try {
+
+        let { tokens }: { tokens: Credentials } = await oauth2Client.getToken(req.body);
+        if (tokens) {
+          oauth2Client.setCredentials(tokens);
+          const userInfo: TokenPayload = jwtDecode(tokens.id_token);
+          // create token
+
+          const refreshTokenItem = await RefreshTokenModel.findOne({ userId: userInfo.sub });
+          if (!!!refreshTokenItem) await RefreshTokenModel.create({ userId: userInfo.sub, refreshToken: tokens.refresh_token });
+
+          return res.send({
+            status: 201,
+            error: false,
+            message: "Login successfully",
+            data: {
+              id: userInfo.sub,
+              username: userInfo.name,
+              accessToken: tokens.id_token
+            }
+          });
+
+        } else {
+          return res.send({
+            status: 400,
+            error: true,
+            message: "Request failed with status code 400"
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        return res.send({
+          status: 400,
+          error: true,
+          message: "Request failed with status code 400"
         });
       }
     } else {

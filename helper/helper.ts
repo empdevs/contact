@@ -3,33 +3,60 @@ import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { IUser } from "../Types";
 import { UserModel } from "../models/Models";
+import jwtDecode from "jwt-decode";
+import { OAuth2Client } from "google-auth-library";
 // import { TelegramBot } from "node-telegram-bot-api";
+
+const client = new OAuth2Client();
 
 export async function authenticateToken(req: any, res: Response, next: any) {
   let accessToken: string = req.headers["accesstoken"];
   if (accessToken) {
     try {
-      await jwt.verify(accessToken, Uri.secretKey, async (err: any, result: any) => {
-        console.log("Error name access token", err);
-        if (err) {
-          if (err.name.includes("TokenExpiredError")) {
-            // console.log("Return token expired error");
-            return res.send({
-              status: 403,
-              error: true,
-              message: "TokenExpiredError",
-            });
-          } else {
-            return res.send({
-              status: 403,
-              error: true,
-              message: 'Error token invalid signature'
-            });
-          }
-        } else {
+      const token = jwtDecode(accessToken);
+      /**
+       * This condition to handle sso google auth
+       */
+      if (token["sub"]) {
+        const ticket = await client.verifyIdToken({
+          idToken: accessToken,
+          audience: Uri.googleClientId
+        });
+
+        const payload = ticket.getPayload();
+        if (payload) {
           return next();
+        } else {
+          return res.send({
+            status: 403,
+            error: true,
+            message: 'Error token invalid signature'
+          });
         }
-      });
+      } else {
+        await jwt.verify(accessToken, Uri.secretKey, async (err: any, result: any) => {
+          console.log("Error name access token", err);
+          if (err) {
+            if (err.name.includes("TokenExpiredError")) {
+              // console.log("Return token expired error");
+              return res.send({
+                status: 403,
+                error: true,
+                message: "TokenExpiredError",
+              });
+            } else {
+              return res.send({
+                status: 403,
+                error: true,
+                message: 'Error token invalid signature'
+              });
+            }
+          } else {
+            return next();
+          }
+        });
+
+      }
     } catch (error: any) {
       console.log(error);
     }
